@@ -17,11 +17,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  <!-- Form-Builder config (keep backend OFF so Preview stays local) -->
+  <!-- Form-Builder config (flip useBackend to true after proxy is deployed) -->
   <script>
     window.FB_CONFIG = {
-      useBackend: false,                 // keep false (no /api/parse calls)
-      vs: { endpoint: '/api/parse' }     // leave as-is for future use
+      useBackend: false,                 // set to true after /api/parse is live
+      vs: { endpoint: '/api/parse' }     // same-origin Vercel proxy
     };
   </script>
 
@@ -141,6 +141,7 @@
 
     <!-- RIGHT COLUMN: Wizard + Editor + Preview -->
     <section class="right card">
+      <!-- Wizard progress -->
       <nav class="wizard" aria-label="Steps">
         <ol class="wizard-steps">
           <li id="wStep1" class="current"><span>1</span> Pick Form</li>
@@ -157,14 +158,11 @@ Budget 350k monthly, 3 months deposit, 3-year term,
 move-in on 2026-03-01, 30-day due diligence."></textarea>
 
       <div class="actions">
-        <button id="btnPreview" class="primary">Generate Preview</button>
-        <button id="btnReset" class="ghost">Reset</button>
-        <!-- NEW: run the 1-input pipeline -->
-        <button id="btnRunPipeline" class="accent" title="Run your Form-Expert pipeline">
-          Run Executive JSON
-        </button>
+        <button id="btnPreview" class="primary" data-tooltip="Render the template using your inputs.">Generate Preview</button>
+        <button id="btnReset" class="ghost" data-tooltip="Clear the editor and preview.">Reset</button>
       </div>
 
+      <!-- Zoom controls -->
       <div class="actions" id="zoomBar" style="margin:6px 0 12px;">
         <button id="zoomOut">Zoom −</button>
         <button id="zoomReset">100%</button>
@@ -176,6 +174,7 @@ move-in on 2026-03-01, 30-day due diligence."></textarea>
         <p class="muted">Step 1: pick a form on the left. Step 2: describe it above. Then click <b>Generate Preview</b>.</p>
       </div>
 
+      <!-- Field Inspector -->
       <div id="fieldInspector">
         <h3>Field Inspector</h3>
         <div class="kv" id="fieldInspectorGrid">
@@ -189,26 +188,25 @@ move-in on 2026-03-01, 30-day due diligence."></textarea>
         <button id="btnVerify" class="ghost" data-tooltip="Open a verify view using the document code." disabled>Open Verify</button>
       </div>
 
+      <!-- Wizard controls -->
       <div class="wizard-controls">
         <button id="btnBack" class="ghost" data-tooltip="Go to the previous step." disabled>← Back</button>
         <button id="btnNext" class="primary" data-tooltip="Continue to the next step.">Next →</button>
         <button id="btnStartOver" class="ghost" data-tooltip="Start the wizard from Step 1.">Start Over</button>
       </div>
 
+      <!-- Screen reader updates -->
       <div id="stepAnnouncer" class="sr-only" aria-live="polite"></div>
     </section>
   </main>
 
   <footer class="site-footer">Prototype only. Everything runs in your browser (localStorage).</footer>
 
+  <!-- Toast host -->
   <div id="toastHost" class="toast-host"></div>
 
+  <!-- App -->
   <script src="templates.js"></script>
   <script src="app.js"></script>
-
-  <!-- Tell the UI where to POST the one-input pipeline -->
-  <script>
-    window.FB_EXEC_ENDPOINT = '/api/form-expert';
-  </script>
 </body>
 </html>
